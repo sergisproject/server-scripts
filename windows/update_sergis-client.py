@@ -3,8 +3,10 @@ Script to pull the latest changes from the SerGIS Client git repository and
 put them in the web directory.
 """
 
-import os.path, subprocess, shutil
-from send2trash.send2trash import send2trash
+import sys, os.path, subprocess, shutil
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "send2trash"))
+from send2trash import send2trash
 
 GIT_REPO = os.path.expanduser("~\\Desktop\\JAKE\\GitHub\\sergis-client")
 WEB_DIR = "C:\\inetpub\\wwwroot\\serious_game_spatial_thinking\\web_game"
