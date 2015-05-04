@@ -1,0 +1,3 @@
+[submodule "windows/send2trash"]
+	path = windows/send2trash
+	url = https://github.com/hsoft/send2trash.git
