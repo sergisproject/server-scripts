@@ -89,12 +89,14 @@ NODE_DIR = "C:\\Program Files\\nodejs"
 # The location of the grunt command
 GRUNT_LOCATION = os.path.expanduser("~\\AppData\\Roaming\\npm\\grunt.cmd")
 
-# The location of the git executable (this example uses GitHub's git)
+# The location of the git executable (this tries to find GitHub's git if no other is specified)
 GIT_PATH = ""
-for f in os.listdir(os.path.expanduser("~\\AppData\\Local\\GitHub")):
-    if f[:12] == "PortableGit_":
-        GIT_PATH = GITHUB_DIR + "\\" + f + "\\bin\\git.exe"
-        break
+if not GIT_PATH:
+    GITHUB_DIR = os.path.expanduser("~\\AppData\\Local\\GitHub")
+    for f in os.listdir(GITHUB_DIR):
+        if f[:12] == "PortableGit_":
+            GIT_PATH = os.path.join(GITHUB_DIR, f, "bin", "git.exe")
+            break
 
 
 ################################################################################
