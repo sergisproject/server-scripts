@@ -60,18 +60,21 @@ WEB_DIR = "C:\\sergis-server"
 # When we're clearing out the web directory, which files/folders to ignore (i.e. keep)
 WEB_DIR_CLEAR_IGNORE = ["iisnode"]
 
-# Config files to copy to the web directory
+# The config.js file for SerGIS Server (to overwrite the repo default)
+CONFIG_JS = os.path.expanduser("~\\Desktop\\JAKE\\sergis-server-config.js")
+
+# Config files to copy to the web directory: [(from, to), ...]
 CONFIG_FILES = [
     # The node.js server config file
-    (os.path.expanduser("~\\Desktop\\JAKE\\sergis-server-config.js"), os.path.join(WEB_DIR, "config.js")),
-    # The iisnode config file
-    (os.path.expanduser("~\\Desktop\\JAKE\\sergis-server-web.config"), os.path.join(WEB_DIR, "web.config"))
+    (CONFIG_JS, os.path.join(WEB_DIR, "config.js")),
+    # The iisnode config file (here, it's relative to the script location)
+    (os.path.join(os.path.dirname(os.path.realpath(__file__)), "sergis-server-web.config"), os.path.join(WEB_DIR, "web.config"))
 ]
 
-# Config files requires to run grunt
+# Config files requires to run grunt: [(from, to), ...]
 GRUNT_CONFIG_FILES = [
     # The node.js server config file
-    (os.path.expanduser("~\\Desktop\\JAKE\\sergis-server-config.js"), os.path.join(GIT_REPO, "config.js"))
+    (CONFIG_JS, os.path.join(GIT_REPO, "config.js"))
 ]
 
 # Ignored files (to not copy from the repo to the web directory)
