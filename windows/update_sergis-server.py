@@ -20,6 +20,7 @@ Usage:
         6. Clear out the web directory.
         7. Copy from the git repo to the web directory.
         8. Copy config files to the web directory.
+        9. Creating the `uploads` directory.
 
     python2 update_sergis-server.py lite
 
@@ -184,6 +185,11 @@ def copyConfigFiles():
         shutil.copy(src, dst)
     print ""
 
+def createUploadsDirectory():
+    """Create the uploads directory in the web directory."""
+    if not os.path.exists(os.path.join(WEB_DIR, "uploads")):
+        os.mkdir(os.path.join(WEB_DIR, "uploads"))
+
 
 ################################################################################
 ## Actually run the tasks to update the web directory
@@ -204,4 +210,6 @@ if __name__ == "__main__":
             clearWebDirectory()
         copyToWebDirectory()
         copyConfigFiles()
+        if not LITE:
+            createUploadsDirectory()
 
