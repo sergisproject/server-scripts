@@ -5,7 +5,7 @@ put them in the web directory.
 The defaults here assume IIS with iisnode, but it can be easily modified for a
 different environment.
 
-Before running this, make sure to set the configuration.
+Before running this, make sure to set the configuration variables.
 
 Usage:
 
@@ -47,7 +47,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "lite":
     LITE = True
 
 # The directory where the sergis-server git repo is
-GIT_REPO = os.path.expanduser("~\\Desktop\\JAKE\\GitHub\\sergis-server")
+GIT_REPO = "C:\\sergis files\\git\\sergis-server"
 
 # The submodules in the sergis-server git repo
 GIT_SUBMODULES = [
@@ -62,7 +62,7 @@ WEB_DIR = "C:\\sergis-server"
 WEB_DIR_CLEAR_IGNORE = ["iisnode"]
 
 # The config.js file for SerGIS Server (to overwrite the repo default)
-CONFIG_JS = os.path.expanduser("~\\Desktop\\JAKE\\sergis-server-config.js")
+CONFIG_JS = "C:\\sergis files\\sergis-server-config.js"
 
 # Config files to copy to the web directory: [(from, to), ...]
 CONFIG_FILES = [
@@ -88,16 +88,18 @@ GIT_REPO_IGNORE_LITE = ["node_modules"]
 NODE_DIR = "C:\\Program Files\\nodejs"
 
 # The location of the grunt command
-GRUNT_LOCATION = os.path.expanduser("~\\AppData\\Roaming\\npm\\grunt.cmd")
+#GRUNT_PATH = os.path.expanduser("~\\AppData\\Roaming\\npm\\grunt.cmd")
+GRUNT_PATH = "C:\\ProgramData\\npm\\grunt.cmd"
 
 # The location of the git executable (this tries to find GitHub's git if no other is specified)
-GIT_PATH = ""
+GIT_PATH = "C:\\Program Files (x86)\\Git\\bin\\git.exe"
 if not GIT_PATH:
     GITHUB_DIR = os.path.expanduser("~\\AppData\\Local\\GitHub")
-    for f in os.listdir(GITHUB_DIR):
-        if f[:12] == "PortableGit_":
-            GIT_PATH = os.path.join(GITHUB_DIR, f, "bin", "git.exe")
-            break
+    if os.path.exists(GITHUB_DIR):
+        for f in os.listdir(GITHUB_DIR):
+            if f[:12] == "PortableGit_":
+                GIT_PATH = os.path.join(GITHUB_DIR, f, "bin", "git.exe")
+                break
 
 
 ################################################################################
@@ -135,7 +137,7 @@ def runGrunt():
         shutil.copy(src, dst)
     # Run grunt
     subprocess.check_call([
-        GRUNT_LOCATION,
+        GRUNT_PATH,
         "dist"
     ], cwd=GIT_REPO)
     # Reset any config files that we copied in
@@ -196,11 +198,32 @@ def createUploadsDirectory():
 ################################################################################
 
 
+def check():
+    """Make sure that all required files/directories exist."""
+    if not os.path.exists(GIT_REPO):
+        print "Couldn't find GIT_REPO at", GIT_REPO
+        return False
+    if not os.path.exists(WEB_DIR):
+        print "Couldn't find WEB_DIR at", WEB_DIR
+        return False
+    if not os.path.exists(CONFIG_JS):
+        print "Couldn't find CONFIG_JS at", CONFIG_JS
+        return False
+    if not os.path.exists(NODE_DIR):
+        print "Couldn't find NODE_DIR at", NODE_DIR
+        return False
+    if not os.path.exists(GRUNT_PATH):
+        print "Couldn't find GRUNT_PATH at", GRUNT_PATH
+        return False
+    # All seems good
+    return True
+
+
 # Alrighty, let's get started!
 if __name__ == "__main__":
     if not GIT_PATH:
-        print "Coultn't find git!"
-    else:
+        print "Couldn't find git!"
+    elif check():
         updateGitRepos()
         if not LITE:
             runNPM()
