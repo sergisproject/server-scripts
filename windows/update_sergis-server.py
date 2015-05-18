@@ -39,7 +39,8 @@ Usage:
         7. Start the SerGIS Socket Server service.
 """
 
-import os, os.path, subprocess, shutil, sys
+import os, os.path, subprocess, shutil, sys, time
+import win32com.shell.shell as shell
 
 
 ################################################################################
@@ -206,11 +207,15 @@ def createUploadsDirectory():
 
 def stopService():
     """Stop the NSSM service for the SerGIS Server socket server."""
-    os.system("cmd.exe /C " + NSSM_PATH + " stop " + NSSM_SERVICE_NAME)
+    shell.ShellExecuteEx(lpVerb="runas", lpFile=NSSM_PATH, lpParameters="stop " + NSSM_SERVICE_NAME, nShow=5)
+    # Let it recuperate
+    time.sleep(5)
 
 def startService():
     """Restart the NSSM service for the SerGIS Server socket server."""
-    os.system("cmd.exe /C " + NSSM_PATH + " start " + NSSM_SERVICE_NAME)
+    shell.ShellExecuteEx(lpVerb="runas", lpFile=NSSM_PATH, lpParameters="start " + NSSM_SERVICE_NAME, nShow=5)
+    # Let it recuperate
+    time.sleep(5)
 
 
 ################################################################################
