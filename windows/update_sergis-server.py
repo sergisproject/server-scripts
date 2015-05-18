@@ -211,7 +211,7 @@ def stopService():
                          lpFile="cmd",
                          lpParameters="/K " + NSSM_PATH + " stop " + NSSM_SERVICE_NAME,
                          nShow=5,
-                         fmask=256) # SEE_MASK_NOASYNC
+                         fMask=256) # SEE_MASK_NOASYNC
     # Let it recuperate
     time.sleep(5)
 
@@ -221,7 +221,7 @@ def startService():
                          lpFile="cmd",
                          lpParameters="/K " + NSSM_PATH + " start " + NSSM_SERVICE_NAME,
                          nShow=5,
-                         fmask=256) # SEE_MASK_NOASYNC
+                         fMask=256) # SEE_MASK_NOASYNC
     # Let it recuperate
     time.sleep(5)
 
