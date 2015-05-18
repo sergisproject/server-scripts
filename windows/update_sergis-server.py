@@ -206,11 +206,11 @@ def createUploadsDirectory():
 
 def stopService():
     """Stop the NSSM service for the SerGIS Server socket server."""
-    os.system(NSSM_PATH + " stop " + NSSM_SERVICE_NAME)
+    os.system("cmd.exe /C " + NSSM_PATH + " stop " + NSSM_SERVICE_NAME)
 
 def startService():
     """Restart the NSSM service for the SerGIS Server socket server."""
-    os.system(NSSM_PATH + " start " + NSSM_SERVICE_NAME)
+    os.system("cmd.exe /C " + NSSM_PATH + " start " + NSSM_SERVICE_NAME)
 
 
 ################################################################################
