@@ -47,7 +47,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "lite":
     LITE = True
 
 # The directory where the sergis-server git repo is
-GIT_REPO = "C:\\sergis files\\git\\sergis-server"
+GIT_REPO = "C:\\sergis_files\\git\\sergis-server"
 
 # The submodules in the sergis-server git repo
 GIT_SUBMODULES = [
@@ -62,7 +62,7 @@ WEB_DIR = "C:\\sergis-server"
 WEB_DIR_CLEAR_IGNORE = ["iisnode"]
 
 # The config.js file for SerGIS Server (to overwrite the repo default)
-CONFIG_JS = "C:\\sergis files\\sergis-server-config.js"
+CONFIG_JS = "C:\\sergis_files\\sergis-server-config.js"
 
 # Config files to copy to the web directory: [(from, to), ...]
 CONFIG_FILES = [

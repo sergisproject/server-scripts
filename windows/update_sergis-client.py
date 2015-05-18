@@ -8,7 +8,7 @@ import sys, os.path, subprocess, shutil
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "send2trash"))
 from send2trash import send2trash
 
-GIT_REPO = "C:\\sergis stuff\\git\\sergis-client"
+GIT_REPO = "C:\\sergis_files\\git\\sergis-client"
 WEB_DIR = "C:\\inetpub\\wwwroot\\serious_game_spatial_thinking\\web_game"
 GIT_PATH = "C:\\Program Files (x86)\\Git\\bin\\git.exe"
 
