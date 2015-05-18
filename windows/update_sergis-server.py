@@ -2,8 +2,10 @@
 Script to pull the latest changes from the SerGIS Server git repository and
 put them in the web directory.
 
-The defaults here assume IIS with iisnode, but it can be easily modified for a
-different environment.
+The defaults here assume:
+ - IIS with iisnode
+ - SerGIS Socket Server service set up through NSSM
+But it can be easily modified for a different environment.
 
 Before running this, make sure to set the configuration variables.
 
@@ -12,25 +14,29 @@ Usage:
     python2 update_sergis-server.py
 
       Fully update the server web directory by:
-        1. Pull the latest changes in the git repo
-        2. Pull the latest changes in the git submodules
-        3. Run `npm install` in the git repo directory
-        4. Run `grunt dist` in the git repo directory
-        5. Set IIS permissions on the web directory.
-        6. Clear out the web directory.
-        7. Copy from the git repo to the web directory.
-        8. Copy config files to the web directory.
-        9. Creating the `uploads` directory.
+        1.  Pull the latest changes in the git repo.
+        2.  Pull the latest changes in the git submodules.
+        3.  Run `npm install` in the git repo directory.
+        4.  Run `grunt dist` in the git repo directory.
+        5.  Stop the SerGIS Socket Server service.
+        6.  Set IIS permissions on the web directory.
+        7.  Clear out the web directory.
+        8.  Copy from the git repo to the web directory.
+        9.  Copy config files to the web directory.
+        10. Creating the `uploads` directory.
+        11. Start the SerGIS Socket Server service
 
     python2 update_sergis-server.py lite
 
       Update the server web directory with the latest changes from the git repo
       without reinstalling all dependencies.
-        1. Pull the latest changes in the git repo
-        2. Pull the latest changes in the git submodules
-        3. Run `grunt dist` in the git repo directory
-        4. Copy from the git repo to the web directory.
-        5. Copy config files to the web directory.
+        1. Pull the latest changes in the git repo.
+        2. Pull the latest changes in the git submodules.
+        3. Run `grunt dist` in the git repo directory.
+        4. Stop the SerGIS Socket Server service.
+        5. Copy from the git repo to the web directory.
+        6. Copy config files to the web directory.
+        7. Start the SerGIS Socket Server service.
 """
 
 import os, os.path, subprocess, shutil, sys
@@ -90,6 +96,12 @@ NODE_DIR = "C:\\Program Files\\nodejs"
 # The location of the grunt command
 #GRUNT_PATH = os.path.expanduser("~\\AppData\\Roaming\\npm\\grunt.cmd")
 GRUNT_PATH = "C:\\ProgramData\\npm\\grunt.cmd"
+
+# The location of NSSM (see http://nssm.co/)
+NSSM_PATH = "C:\\nssm\\win64\\nssm.exe"
+
+# The NSSM service name
+NSSM_SERVICE_NAME = "sergis-server-service"
 
 # The location of the git executable (this tries to find GitHub's git if no other is specified)
 GIT_PATH = "C:\\Program Files (x86)\\Git\\bin\\git.exe"
@@ -192,6 +204,22 @@ def createUploadsDirectory():
     if not os.path.exists(os.path.join(WEB_DIR, "uploads")):
         os.mkdir(os.path.join(WEB_DIR, "uploads"))
 
+def stopService():
+    """Stop the NSSM service for the SerGIS Server socket server."""
+    subprocess.check_call([
+        NSSM_PATH,
+        "stop",
+        NSSM_SERVICE_NAME
+    ])
+
+def startService():
+    """Restart the NSSM service for the SerGIS Server socket server."""
+    subprocess.check_call([
+        NSSM_PATH,
+        "start",
+        NSSM_SERVICE_NAME
+    ])
+
 
 ################################################################################
 ## Actually run the tasks to update the web directory
@@ -215,6 +243,12 @@ def check():
     if not os.path.exists(GRUNT_PATH):
         print "Couldn't find GRUNT_PATH at", GRUNT_PATH
         return False
+    if not os.path.exists(NSSM_PATH):
+        print "Couldn't find NSSM_PATH at", NSSM_PATH
+        return False
+    if not os.path.exists(GIT_PATH):
+        print "Couldn't find GIT_PATH at", GIT_PATH
+        return False
     # All seems good
     return True
 
@@ -228,6 +262,7 @@ if __name__ == "__main__":
         if not LITE:
             runNPM()
         runGrunt()
+        stopService()
         if not LITE:
             setIISPermissions()
             clearWebDirectory()
@@ -235,4 +270,5 @@ if __name__ == "__main__":
         copyConfigFiles()
         if not LITE:
             createUploadsDirectory()
+        startService()
 
