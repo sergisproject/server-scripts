@@ -41,7 +41,6 @@ Usage:
 
 import os, os.path, subprocess, shutil, sys, time
 import win32com.shell.shell as shell
-import win32com.shell.shellcon as shellcon
 
 
 ################################################################################
@@ -212,7 +211,7 @@ def stopService():
                          lpFile="cmd",
                          lpParameters="/K " + NSSM_PATH + " stop " + NSSM_SERVICE_NAME,
                          nShow=5,
-                         fmask=shellcon.SEE_MASK_NOASYNC)
+                         fmask=256) # SEE_MASK_NOASYNC
     # Let it recuperate
     time.sleep(5)
 
@@ -222,7 +221,7 @@ def startService():
                          lpFile="cmd",
                          lpParameters="/K " + NSSM_PATH + " start " + NSSM_SERVICE_NAME,
                          nShow=5,
-                         fmask=shellcon.SEE_MASK_NOASYNC)
+                         fmask=256) # SEE_MASK_NOASYNC
     # Let it recuperate
     time.sleep(5)
 
