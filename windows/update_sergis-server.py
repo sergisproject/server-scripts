@@ -41,6 +41,7 @@ Usage:
 
 import os, os.path, subprocess, shutil, sys, time
 import win32com.shell.shell as shell
+import win32com.shell.shellcon as shellcon
 
 
 ################################################################################
@@ -207,13 +208,21 @@ def createUploadsDirectory():
 
 def stopService():
     """Stop the NSSM service for the SerGIS Server socket server."""
-    shell.ShellExecuteEx(lpVerb="runas", lpFile=NSSM_PATH, lpParameters="stop " + NSSM_SERVICE_NAME, nShow=5)
+    shell.ShellExecuteEx(lpVerb="runas",
+                         lpFile="cmd",
+                         lpParameters="/K " + NSSM_PATH + " stop " + NSSM_SERVICE_NAME,
+                         nShow=5,
+                         fmask=shellcon.SEE_MASK_NOASYNC)
     # Let it recuperate
     time.sleep(5)
 
 def startService():
     """Restart the NSSM service for the SerGIS Server socket server."""
-    shell.ShellExecuteEx(lpVerb="runas", lpFile=NSSM_PATH, lpParameters="start " + NSSM_SERVICE_NAME, nShow=5)
+    shell.ShellExecuteEx(lpVerb="runas",
+                         lpFile="cmd",
+                         lpParameters="/K " + NSSM_PATH + " start " + NSSM_SERVICE_NAME,
+                         nShow=5,
+                         fmask=shellcon.SEE_MASK_NOASYNC)
     # Let it recuperate
     time.sleep(5)
 
